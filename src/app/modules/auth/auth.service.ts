@@ -8,7 +8,6 @@ import authValidations from './auth.validation';
 import { LoginPayload, RegisterPayload } from './auth.interface';
 import userService from '../user/user.service';
 
-
 class AuthService {
   async login(payload: LoginPayload) {
     //  Validate payload  throw error when invalid
@@ -22,7 +21,6 @@ class AuthService {
 
     if (!user) throw new AppError(httpStatus.NOT_FOUND, 'Account not found');
 
-    
     // Compare password
     const isPasswordValid =
       user && (await bcryptHelper.compare(password, user.password));
@@ -49,12 +47,11 @@ class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async register(payload:RegisterPayload){
-     // Create user 
-     await  userService.createUser(payload);
-     return null
+  async register(payload: RegisterPayload) {
+    // Create user
+    await userService.createUser(payload);
+    return null;
   }
-
 }
 
 export default new AuthService();

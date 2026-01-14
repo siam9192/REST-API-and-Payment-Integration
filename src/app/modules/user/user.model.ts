@@ -9,9 +9,9 @@ const UserModelSchema = new Schema<User>(
       maxLength: 50,
       required: true,
     },
-    gender:{
+    gender: {
       type: String,
-      enum:Object.values(Gender),
+      enum: Object.values(Gender),
       required: true,
     },
     email: {
@@ -26,12 +26,10 @@ const UserModelSchema = new Schema<User>(
       required: true,
       select: false,
     },
-    
   },
   {
     timestamps: true,
   },
 );
-
 
 export const UserModel = model<User>('User', UserModelSchema);

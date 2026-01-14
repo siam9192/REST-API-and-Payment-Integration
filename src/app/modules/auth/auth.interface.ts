@@ -1,4 +1,4 @@
-import { CreateUserPayload } from "../user/user.interface";
+import { CreateUserPayload } from '../user/user.interface';
 
 export interface UserRegistrationPayload {
   name: string;
@@ -12,7 +12,7 @@ export interface LoginPayload {
   password: string;
 }
 
-export type RegisterPayload  = CreateUserPayload
+export type RegisterPayload = CreateUserPayload;
 
 export interface ChangePasswordPayload {
   oldPassword: string;
@@ -20,5 +20,5 @@ export interface ChangePasswordPayload {
 }
 
 export interface AuthUser {
-  id:string
+  id: string;
 }

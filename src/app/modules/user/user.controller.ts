@@ -12,7 +12,6 @@ class UserController {
       data: result,
     });
   });
-
 }
 
 export default new UserController();

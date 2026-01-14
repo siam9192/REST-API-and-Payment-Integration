@@ -40,7 +40,6 @@ class AuthController {
       data: result,
     });
   });
-
 }
 
 export default new AuthController();

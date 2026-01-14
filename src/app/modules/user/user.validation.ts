@@ -1,24 +1,19 @@
-import { z } from "zod";
-import { Gender } from "./user.interface";
+import { z } from 'zod';
+import { Gender } from './user.interface';
 
 export const createUserSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, "Full name must be at least 2 characters"),
+  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   gender: z.nativeEnum(Gender),
 
-  email: z
+  email: z.string().email('Invalid email address'),
+  password: z
     .string()
-    .email("Invalid email address"),
- password: z
-  .string()
-  .min(8, "Password must be at least 8 characters")
-  .max(32, "Password must be at most 32 characters"),
-
+    .min(8, 'Password must be at least 8 characters')
+    .max(32, 'Password must be at most 32 characters'),
 });
 
 const userValidations = {
- createUserSchema
+  createUserSchema,
 };
 
 export default userValidations;
