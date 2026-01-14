@@ -1,5 +1,4 @@
 import envConfig from '../../config/env.config';
-import AppError from '../../errors/AppError';
 import catchAsync from '../../utils/catchAsync';
 import httpStatus from '../../utils/http-status';
 import { sendSuccessResponse } from '../../utils/response';
@@ -32,47 +31,16 @@ class AuthController {
     });
   });
 
-  logout = catchAsync(async (req, res) => {
-    res.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: envConfig.environment?.toLowerCase() === 'production',
-      sameSite:
-        envConfig.environment?.toLowerCase() === 'production' ? 'none' : 'lax',
-    });
-
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: envConfig.environment?.toLowerCase() === 'production',
-      sameSite:
-        envConfig.environment?.toLowerCase() === 'production' ? 'none' : 'lax',
-    });
+  register = catchAsync(async (req, res) => {
+    const result = await authService.register(req.body);
 
     sendSuccessResponse(res, {
-      message: 'Logout successful',
-      statusCode: httpStatus.OK,
-      data: null,
+      message: 'Registration successful',
+      statusCode: httpStatus.CREATED,
+      data: result,
     });
   });
 
-  getNewAccessToken = catchAsync(async (req, res) => {
-    const refreshToken = req.headers?.authorization?.replace('Bearer', '');
-    if (!refreshToken) throw new Error();
-
-    const result = await authService.getNewAccessToken(refreshToken);
-    res.cookie('accessToken', result.accessToken, {
-      httpOnly: true,
-      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
-      sameSite:
-        envConfig.environment?.toLowerCase() === 'production' ? 'none' : 'lax',
-      maxAge: parse(envConfig.jwt.access_token_expire as string) as number,
-    });
-
-    sendSuccessResponse(res, {
-      message: 'New access token retrieved successfully',
-      statusCode: httpStatus.OK,
-      data: null,
-    });
-  });
 }
 
 export default new AuthController();
