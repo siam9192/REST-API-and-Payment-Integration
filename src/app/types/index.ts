@@ -29,11 +29,11 @@ export interface ConnectedUser {
   socketIds: string[];
 }
 
-export enum TaskEvent {
-  CREATED = 'task:created',
-  UPDATED = 'task:updated',
-  ASSIGNED = 'task:assigned',
-  UNASSIGNED = 'task:unassigned',
-  COMPLETED = 'task:completed',
-  DELETED = 'task:deleted',
+export interface StripeSessionPayload {
+  transactionId: string;
+  currency: string;
+  productsData: { product_name: string; price: number; quantity: number }[];
+  successUrl?: string;
+  cancelUrl?: string;
+  metadata?: Record<string, any>;
 }

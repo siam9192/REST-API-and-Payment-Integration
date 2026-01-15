@@ -16,6 +16,7 @@ const envConfig = {
     access_token_expire: process.env.JWT_ACCESS_TOKEN_EXPIRE,
     refresh_token_expire: process.env.JWT_REFRESH_TOKEN_EXPIRE,
   },
+  stripe_secret: process.env.STRIPE_SECRET,
 };
 
 export default envConfig;

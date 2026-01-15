@@ -7,9 +7,8 @@ import envConfig from '../config/env.config';
 import { JwtPayload } from 'jsonwebtoken';
 import { UserModel } from '../modules/user/user.model';
 import { AuthUser } from '../modules/auth/auth.interface';
-import { UserRole, UserStatus } from '../modules/user/user.interface';
 
-function auth(...roles: UserRole[]) {
+function auth() {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token1 = req.cookies?.accessToken?.replace('Bearer ', '');
     const token2 = req.headers.authorization?.replace('Bearer ', '');
@@ -40,23 +39,8 @@ function auth(...roles: UserRole[]) {
       throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
     }
 
-    // checking if the user is blocked
-    if (user.status === UserStatus.BLOCKED) {
-      throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
-    }
-
-    // checking if the user role
-    if (roles.length && !roles.includes(user.role)) {
-      throw new AppError(
-        httpStatus.UNAUTHORIZED,
-        'You have no access of this route',
-      );
-    }
-
     req.user = {
-      userId: user._id.toString(),
-      profileId: user.profileId.toString(),
-      role: user.role,
+      id: user._id.toString(),
     };
 
     next();
