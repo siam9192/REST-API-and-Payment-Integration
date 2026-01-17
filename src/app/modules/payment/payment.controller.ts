@@ -15,6 +15,9 @@ class PaymentController {
       ...result,
     });
   });
+  webhook = catchAsync(async (req, res) => {
+    const result = await paymentService.webhook(req.body, req.headers);
+  });
 }
 
 export default new PaymentController();

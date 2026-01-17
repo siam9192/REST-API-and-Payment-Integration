@@ -4,10 +4,8 @@ import routes from './utils/routes';
 import cookieParser from 'cookie-parser';
 import { GlobalErrorHandler } from './errors/globalErrorHandler';
 import envConfig from './config/env.config';
+import paymentController from './modules/payment/payment.controller';
 const app = express();
-
-
-app.use(express.json());
 
 app.use(
   cors({ origin: [envConfig.url.client_origin as string], credentials: true }),
@@ -20,8 +18,13 @@ app.get('/', (_req: Request, res: Response) => {
   res.status(200).json({ message: '🚀 Server is running' });
 });
 
-// API routes
-app.use('/api/v1', routes);
+app.post(
+  '/api/v1/webhook',
+  express.raw({ type: 'application/json' }),
+  paymentController.webhook,
+);
+
+app.use('/api/v1', express.json(), routes);
 
 // Route not found Handler
 app.use((req: Request, res: Response) => {

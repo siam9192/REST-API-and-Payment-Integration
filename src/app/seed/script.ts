@@ -1,15 +1,9 @@
 import mongoose from 'mongoose';
 import envConfig from '../config/env.config';
 import userService from '../modules/user/user.service';
-import projectService from '../modules/project/project.service';
-import {
-  sampleAdmin,
-  sampleClients,
-  sampleEmployees,
-} from './data/user.seed.data';
-import { sampleProjects } from './data/project.seed.data';
-import sampleRisks from './data/risk.seed.data';
-import { ProjectRiskModel } from '../modules/project-risk/project-risk.model';
+import { sampleProducts } from './sample-data/projects.data';
+import productService from '../modules/product/product.service';
+import { sampleUsers } from './sample-data/users.data';
 
 async function clearAllCollections() {
   const collections = mongoose.connection.collections;
@@ -23,10 +17,6 @@ async function clearAllCollections() {
   console.log('All collections cleared.');
 }
 
-const getRandomInt = (max: number): number => {
-  return Math.floor(Math.random() * (max + 1));
-};
-
 async function main() {
   try {
     console.log('--- Script started ---');
@@ -36,49 +26,13 @@ async function main() {
     //Clear full database
     await clearAllCollections();
 
-    // Create Admin
-    console.log('Creating admin...');
-    await userService.createAdmin(sampleAdmin);
-
-    //Create Employees and Clients in Parallel
+    console.log('Creating sample users and  products ');
+    //Creating user and products
     console.log('Creating users...');
-    const [employees, clients] = await Promise.all([
-      Promise.all(sampleEmployees.map((e) => userService.createEmployee(e))),
-      Promise.all(sampleClients.map((c) => userService.createClient(c))),
+    await Promise.all([
+      Promise.all(sampleUsers.map((u) => userService.createUser(u as any))),
+      Promise.all(sampleProducts.map((p) => productService.createProduct(p))),
     ]);
-
-    // Filter out
-    const employeeIds = employees.filter(Boolean).map((e) => e!._id);
-    const clientIds = clients.filter(Boolean).map((c) => c!._id);
-
-    console.log(
-      `Created ${employeeIds.length} employees and ${clientIds.length} clients`,
-    );
-
-    // Create Projects
-    console.log('Creating projects...');
-    const createdProjects = await Promise.all(
-      sampleProjects.map((project) => {
-        return projectService.createProject({
-          ...project,
-          // Use .length - 1 to avoid out-of-bounds undefined
-          clientId: clientIds[getRandomInt(1)].toString(),
-          employeeIds: employeeIds.slice(0, 5).map((id) => id.toString()),
-        } as any);
-      }),
-    );
-
-    const projectIds = createdProjects.map((p) => p._id);
-
-    //Create Risks
-    console.log('Creating risks...');
-    await ProjectRiskModel.insertMany(
-      sampleRisks.map((risk) => ({
-        ...risk,
-        project: projectIds[getRandomInt(projectIds.length - 1)],
-        employee: employeeIds[getRandomInt(1)],
-      })),
-    );
 
     console.log('--- Script run successfully ---');
   } catch (error) {

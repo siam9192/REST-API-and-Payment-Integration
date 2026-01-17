@@ -32,8 +32,18 @@ export interface ConnectedUser {
 export interface StripeSessionPayload {
   transactionId: string;
   currency: string;
-  productsData: { product_name: string; price: number; quantity: number }[];
-  successUrl?: string;
-  cancelUrl?: string;
+  productsData: {
+    product_name: string;
+    price: number;
+    quantity: number;
+    images: string[];
+  }[];
+  successUrl: string;
+  cancelUrl: string;
   metadata?: Record<string, any>;
+}
+
+export interface WebhookMetadata {
+  paymentId: string;
+  orderId: string;
 }

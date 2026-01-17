@@ -1,3 +1,4 @@
+import { paginationOptionPicker } from '../../helpers/pagination.helper';
 import catchAsync from '../../utils/catchAsync';
 import httpStatus from '../../utils/http-status';
 import { sendSuccessResponse } from '../../utils/response';
@@ -10,6 +11,17 @@ class UserController {
       message: 'Current user retrieved successfully',
       statusCode: httpStatus.OK,
       data: result,
+    });
+  });
+
+  getUsers = catchAsync(async (req, res) => {
+    const result = await userService.getUsers(
+      paginationOptionPicker(req.query),
+    );
+    sendSuccessResponse(res, {
+      message: 'Users retrieved successfully',
+      statusCode: httpStatus.OK,
+      ...result,
     });
   });
 }

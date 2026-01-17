@@ -1,10 +1,14 @@
+import Stripe from 'stripe';
 import envConfig from '../../config/env.config';
 import AppError from '../../errors/AppError';
 import { calculatePagination } from '../../helpers/pagination.helper';
 import { PaginationOptions } from '../../types';
 import httpStatus from '../../utils/http-status';
+import { OrderStatus } from '../order/order.interface';
+import { OrderModel } from '../order/order.model';
+import { PaymentStatus } from './payment.interface';
 import { PaymentModel } from './payment.model';
-const stripe = require('stripe')(envConfig.stripe_secret);
+const stripe = new Stripe(envConfig.stripe_secret as string);
 
 class PaymentService {
   async getPayments(paginationOptions: PaginationOptions) {
@@ -28,42 +32,72 @@ class PaymentService {
     };
   }
 
-
-  async webhook (body:any,headers:any){
-    const endpointSecret = "7287722"
-     let event = body;
-  if (endpointSecret) {
-    // Get the signature sent by Stripe
+  async webhook(body: Buffer, headers: any) {
     const signature = headers['stripe-signature'];
+    let event: Stripe.Event;
+
     try {
+      // Verify webhook signature
       event = stripe.webhooks.constructEvent(
         body,
         signature,
-        endpointSecret
+        envConfig.stripe_webhook_secret as string,
       );
-    } catch (err) { 
-      throw new AppError(httpStatus.BAD_REQUEST,"Verification failed")
+    } catch (err: any) {
+      console.error('Stripe webhook verification failed:', err.message);
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Webhook Error: ${err.message}`,
+      );
     }
-  }
 
-  // Handle the event
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      console.log(`PaymentIntent for ${paymentIntent.amount} was successful!`);
-          
-      break;
-    case 'payment_method.attached':
-      const paymentMethod = event.data.object;
-      // Then define and call a method to handle the successful attachment of a PaymentMethod.
-      // handlePaymentMethodAttached(paymentMethod);
-      break;
-    default:
-      // Unexpected event type
-      console.log(`Unhandled event type ${event.type}.`);
-  }
+    const session = event.data.object as any;
 
-  
+    let metadata = session.metadata;
+ 
+    // if (!metadata || Object.keys(metadata).length === 0) {
+    //   if (session.payment_intent && typeof session.payment_intent === 'string') {
+    //     const pi = await stripe.paymentIntents.retrieve(session.payment_intent);
+    //     metadata = pi.metadata;
+    //   }
+    // }
+
+    if (!metadata) throw new AppError(httpStatus.BAD_REQUEST, 'Bad request');
+
+    // Handle specific event types
+    switch (event.type) {
+      case 'checkout.session.completed':
+      case 'checkout.session.async_payment_succeeded':
+        // Ensure payment is actually successful
+        if (session.payment_status === 'paid') {
+          const transactionId = session.payment_intent as string;
+
+          await PaymentModel.findByIdAndUpdate(metadata.paymentId, {
+            status: PaymentStatus.SUCCESS,
+            transactionId: transactionId, // Store the pi_XXX ID
+          });
+        }
+
+        await OrderModel.findByIdAndUpdate(metadata.orderId, {
+          status: OrderStatus.PLACED,
+        });
+
+        break;
+
+      case 'checkout.session.expired':
+        await PaymentModel.findByIdAndUpdate(metadata.paymentId, {
+          status: PaymentStatus.FAILED,
+        });
+
+        await OrderModel.findByIdAndUpdate(metadata.orderId, {
+          status: OrderStatus.FAILED,
+        });
+
+        break;
+
+      default:
+        console.log(`Unhandled event type: ${event.type}`);
+    }
   }
 }
 

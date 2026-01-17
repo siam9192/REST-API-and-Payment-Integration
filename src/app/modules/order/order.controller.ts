@@ -6,6 +6,7 @@ import orderService from './order.service';
 
 class OrderController {
   initOrder = catchAsync(async (req, res) => {
+    console.log(req.body);
     const result = await orderService.initOrder(req.user, req.body);
     sendSuccessResponse(res, {
       message: 'Order initialized successfully',

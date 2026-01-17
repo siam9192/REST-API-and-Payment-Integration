@@ -49,8 +49,7 @@ class AuthService {
 
   async register(payload: RegisterPayload) {
     // Create user
-    await userService.createUser(payload);
-    return null;
+    return await userService.createUser(payload);
   }
 }
 

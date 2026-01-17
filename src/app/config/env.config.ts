@@ -17,6 +17,7 @@ const envConfig = {
     refresh_token_expire: process.env.JWT_REFRESH_TOKEN_EXPIRE,
   },
   stripe_secret: process.env.STRIPE_SECRET,
+  stripe_webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
 };
 
 export default envConfig;

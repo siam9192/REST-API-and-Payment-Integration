@@ -8,7 +8,7 @@ import orderValidations from './order.validation';
 import { OrderModel } from './order.model';
 import { objectId } from '../../helpers/utils.helper';
 import { PaymentModel } from '../payment/payment.model';
-import { createStripeSession } from '../../utils/stripe';
+import { createStripeCheckoutSession } from '../../utils/stripe';
 import { PaginationOptions } from '../../types';
 import { calculatePagination } from '../../helpers/pagination.helper';
 
@@ -62,22 +62,23 @@ class OrderService {
       ]);
 
       // Create stripe payment
-      const { sessionUrl } = await createStripeSession({
+      const { sessionUrl } = await createStripeCheckoutSession({
         currency: 'USD',
-        cancelUrl: '/',
-        successUrl: '',
         productsData: [
           {
             product_name: product.name,
+            images: [product.imageUrl],
             price: createdPayment.amount,
             quantity: 1,
           },
         ],
         transactionId,
         metadata: {
-          paymentId: createdPayment.orderId,
-          orderId: createdOrder._id,
+          paymentId: createdPayment.orderId.toString(),
+          orderId: createdOrder._id.toString(),
         },
+        cancelUrl: 'http://localhost:3000/suceess',
+        successUrl: 'http://localhost:3000/cancel',
       });
 
       await session.commitTransaction();
@@ -85,6 +86,7 @@ class OrderService {
       return { paymentSessionUrl: sessionUrl };
     } catch (error) {
       await session.abortTransaction();
+      throw error;
     } finally {
       await session.endSession();
     }
