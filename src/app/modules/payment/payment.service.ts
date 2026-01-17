@@ -54,13 +54,6 @@ class PaymentService {
     const session = event.data.object as any;
 
     let metadata = session.metadata;
- 
-    // if (!metadata || Object.keys(metadata).length === 0) {
-    //   if (session.payment_intent && typeof session.payment_intent === 'string') {
-    //     const pi = await stripe.paymentIntents.retrieve(session.payment_intent);
-    //     metadata = pi.metadata;
-    //   }
-    // }
 
     if (!metadata) throw new AppError(httpStatus.BAD_REQUEST, 'Bad request');
 

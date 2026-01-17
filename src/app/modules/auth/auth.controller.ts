@@ -1,9 +1,10 @@
 import envConfig from '../../config/env.config';
+import { parseDurationMs } from '../../helpers/utils.helper';
 import catchAsync from '../../utils/catchAsync';
 import httpStatus from '../../utils/http-status';
 import { sendSuccessResponse } from '../../utils/response';
 import authService from './auth.service';
-import parse from 'parse-duration';
+
 
 class AuthController {
   login = catchAsync(async (req, res) => {
@@ -13,17 +14,8 @@ class AuthController {
       secure: envConfig.environment?.toLocaleLowerCase() === 'production',
       sameSite:
         envConfig.environment?.toLowerCase() === 'production' ? 'none' : 'lax',
-      maxAge: parse(envConfig.jwt.access_token_expire as string) as number,
+      maxAge: parseDurationMs(envConfig.jwt.access_token_expire as string) as number,
     });
-
-    res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true,
-      secure: envConfig.environment?.toLocaleLowerCase() === 'production',
-      sameSite:
-        envConfig.environment?.toLowerCase() === 'production' ? 'none' : 'lax',
-      maxAge: parse(envConfig.jwt.refresh_token_expire as string) as number,
-    });
-
     sendSuccessResponse(res, {
       message: 'Login successful',
       statusCode: httpStatus.OK,

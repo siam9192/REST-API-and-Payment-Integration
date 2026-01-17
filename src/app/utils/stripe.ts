@@ -1,5 +1,5 @@
 import envConfig from '../config/env.config';
-import { StripeSessionPayload } from '../types';
+import type { StripeSessionPayload } from '../types';
 const stripe = require('stripe')(envConfig.stripe_secret);
 
 export const createStripeCheckoutSession = async (

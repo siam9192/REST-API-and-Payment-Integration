@@ -11,7 +11,6 @@ import { calculatePagination } from '../../helpers/pagination.helper';
 
 class UserService {
   async getCurrentUser(authUser: AuthUser) {
-    console.log(authUser);
     const user = await UserModel.findById(authUser.id).lean();
     // Check user existence
     if (!user) throw new AppError(httpStatus.NOT_FOUND, 'User not found');

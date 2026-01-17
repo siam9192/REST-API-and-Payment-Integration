@@ -11,6 +11,7 @@ import { PaymentModel } from '../payment/payment.model';
 import { createStripeCheckoutSession } from '../../utils/stripe';
 import { PaginationOptions } from '../../types';
 import { calculatePagination } from '../../helpers/pagination.helper';
+import envConfig from '../../config/env.config';
 
 class OrderService {
   async initOrder(authUser: AuthUser, payload: InitOrderPayload) {
@@ -66,7 +67,7 @@ class OrderService {
         currency: 'USD',
         productsData: [
           {
-            product_name: product.name,
+            product_name: `${product.name} x${payload.quantity}`,
             images: [product.imageUrl],
             price: createdPayment.amount,
             quantity: 1,
@@ -77,8 +78,8 @@ class OrderService {
           paymentId: createdPayment.orderId.toString(),
           orderId: createdOrder._id.toString(),
         },
-        cancelUrl: 'http://localhost:3000/suceess',
-        successUrl: 'http://localhost:3000/cancel',
+        cancelUrl: `${envConfig.url.backend_origin}/cancel`,
+        successUrl: `${envConfig.url.backend_origin}/success`
       });
 
       await session.commitTransaction();

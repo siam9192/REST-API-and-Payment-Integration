@@ -37,14 +37,9 @@ class AuthService {
       envConfig.jwt.access_token_secret as string,
       envConfig.jwt.access_token_expire as string,
     );
-    // Generate refresh token
-    const refreshToken = jwtHelper.generateToken(
-      tokenPayload,
-      envConfig.jwt.refresh_token_secret as string,
-      envConfig.jwt.refresh_token_expire as string,
-    );
+    
 
-    return { accessToken, refreshToken };
+    return { accessToken};
   }
 
   async register(payload: RegisterPayload) {

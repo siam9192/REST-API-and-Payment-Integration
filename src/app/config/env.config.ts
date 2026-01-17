@@ -8,6 +8,7 @@ const envConfig = {
   url: {
     database: process.env.DATABASE_URL,
     client_origin: process.env.CLIENT_ORIGIN,
+    backend_origin: process.env.BACKEND_ORIGIN
   },
 
   jwt: {

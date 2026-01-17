@@ -14,7 +14,7 @@ function auth() {
     const token2 = req.headers.authorization?.replace('Bearer ', '');
 
     const token = token1 || token2;
-    console.log(token);
+    
     // checking if the token is missing
     if (!token) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
