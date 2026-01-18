@@ -4,6 +4,7 @@ import envConfig from './config/env.config';
 
 async function main() {
   try {
+    console.log(envConfig)
      await mongoose.connect(envConfig.url.database as string);
     console.log('--database connected successfully');
     app.listen(5000, async () => {

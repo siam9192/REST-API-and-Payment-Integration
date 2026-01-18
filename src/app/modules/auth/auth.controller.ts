@@ -17,9 +17,9 @@ class AuthController {
       maxAge: parseDurationMs(envConfig.jwt.access_token_expire as string) as number,
     });
     sendSuccessResponse(res, {
-      message: 'Login successful',
+      message: 'Login successful and accessToken retrieved with cookie',
       statusCode: httpStatus.OK,
-      data: result,
+      data: null,
     });
   });
 
@@ -29,7 +29,7 @@ class AuthController {
     sendSuccessResponse(res, {
       message: 'Registration successful',
       statusCode: httpStatus.CREATED,
-      data: result,
+      data: result
     });
   });
 }

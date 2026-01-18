@@ -51,7 +51,7 @@ npm run seed
 | Method | Endpoint               | Description                                  |
 | ------ | ---------------------- | -------------------------------------------- |
 | GET    | `/api/v1/users/me`     | Get currently logged-in user profile         |
-| GET    | `/api/v1/users`        | Get list of users      (Public route for Testing only)        |
+| GET    | `/api/v1/users`        | Get all users      (Public route for Testing only)        |
 
 
 
@@ -71,7 +71,7 @@ npm run seed
 | ------ | ------------------------ | ----------------------------------- |
 | POST   | `/api/v1/orders/init`         | Init a new order                  |
 | GET    | `/api/v1/orders`         | Get all orders   (Public route for Testing only)      |
-
+| GET    | `/api/v1/orders/me`         | Get logged in users   orders   |
 
 
 

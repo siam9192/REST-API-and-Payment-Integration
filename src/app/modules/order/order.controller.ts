@@ -8,7 +8,7 @@ class OrderController {
   initOrder = catchAsync(async (req, res) => {
     const result = await orderService.initOrder(req.user, req.body);
     sendSuccessResponse(res, {
-      message: 'Order initialized successfully',
+      message: 'Order initialized successfully.Please complete payment from provided url',
       statusCode: httpStatus.CREATED,
       data: result,
     });

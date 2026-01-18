@@ -50,6 +50,7 @@ class PaymentService {
         `Webhook Error: ${err.message}`,
       );
     }
+    console.log(event)
 
     const session = event.data.object as any;
 
