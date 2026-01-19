@@ -70,7 +70,7 @@ npm run seed
 | Method | Endpoint                 | Description                         |
 | ------ | ------------------------ | ----------------------------------- |
 | POST   | `/api/v1/orders/init`         | Init a new order                  |
-| GET    | `/api/v1/orders`         | Get all orders   (Public route for Testing only)      |
+| GET    | `/api/v1/orders`         | Get all orders   (Public endpoint for Testing only)      |
 | GET    | `/api/v1/orders/me`         | Get logged in users   orders   |
 
 
@@ -80,7 +80,7 @@ npm run seed
 | Method | Endpoint                          | Description                                      |
 | ------ | --------------------------------- | ------------------------------------------------ |
 | POST   | `/api/v1/payments/webhook`        | Stripe webhook for payment verification         |
-| GET    | `/api/v1/payments`                | Get all payments (Public route for Testing only)        |
+| GET    | `/api/v1/payments`                | Get all payments (Public endpoint for Testing only)        |
 
 ---
 
@@ -109,7 +109,7 @@ This document describes the end-to-end payment flow using Stripe Checkout and we
    - Return the `session_url` to the client
 
 3. **User Makes Payment**
-   - User is redirected to the Stripe Checkout page
+   - User is make payment to the Stripe Checkout page
    - Payment is completed or cancelled on Stripe
 
 4. **Webhook Triggered**
@@ -131,7 +131,7 @@ This document describes the end-to-end payment flow using Stripe Checkout and we
      - `payment status = failed`
      - `order status = failed`
 
-8. **Client Redirection**
+8. **Redirection**
    - Redirect user to:
      -  Success page on payment success
      -  Failure / cancel page on payment failure

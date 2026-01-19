@@ -101,7 +101,7 @@ class OrderService {
     const { page, limit, skip, sortBy, sortOrder } =
       calculatePagination(paginationOptions);
 
-    const whereConditions = { userId: objectId(authUser.id) };
+    const whereConditions = { userId: objectId(authUser.id),status:OrderStatus.PLACED};
     // Fetch orders
     const payments = await OrderModel.find(whereConditions)
       .sort({ [sortBy]: sortOrder })

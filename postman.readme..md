@@ -33,8 +33,8 @@ No manual JWT setup is required.
 
 | Method | Endpoint                   | Description                                              |
 | ------ | -------------------------- | -------------------------------------------------------- |
-| POST   | `/api/v1/auth/login`       | Authenticate user and return access & refresh tokens     |
-| POST   | `/api/v1/auth/register`    | Register a new user                                      |
+| POST   | `/auth/login`       | Authenticate user and return access & refresh tokens     |
+| POST   | `/auth/register`    | Register a new user                                      |
 
 
 
@@ -43,8 +43,8 @@ No manual JWT setup is required.
 
 | Method | Endpoint               | Description                                  |
 | ------ | ---------------------- | -------------------------------------------- |
-| GET    | `/api/v1/users/me`     | Get currently logged-in user profile         |
-| GET    | `/api/v1/users`        | Get all users      (Public route for Testing only)        |
+| GET    | `/users/me`     | Get currently logged-in user profile         |
+| GET    | `/users`        | Get all users      (Public route for Testing only)        |
 
 
 
@@ -52,8 +52,8 @@ No manual JWT setup is required.
 
 | Method | Endpoint                    | Description                       |
 | ------ | --------------------------- | --------------------------------- |
-| POST   | `/api/v1/products`          | Create a new product              |
-| GET    | `/api/v1/products`          | Get all products                  |
+| POST   | `/products`          | Create a new product              |
+| GET    | `/products`          | Get all products                  |
 
 
 
@@ -62,9 +62,9 @@ No manual JWT setup is required.
 
 | Method | Endpoint                 | Description                         |
 | ------ | ------------------------ | ----------------------------------- |
-| POST   | `/api/v1/orders/init`         | Init a new order                  |
-| GET    | `/api/v1/orders`         | Get all orders   (Public route for Testing only)      |
-| GET    | `/api/v1/orders/me`         | Get logged in users   orders   |
+| POST   | `/orders/init`         | Init a new order                  |
+| GET    | `/orders`         | Get all orders   (Public route for Testing only)      |
+| GET    | `/orders/me`         | Get logged in users   orders   |
 
 
 
@@ -72,8 +72,8 @@ No manual JWT setup is required.
 
 | Method | Endpoint                          | Description                                      |
 | ------ | --------------------------------- | ------------------------------------------------ |
-| POST   | `/api/v1/payments/webhook`        | Stripe webhook for payment verification         |
-| GET    | `/api/v1/payments`                | Get all payments (Public route for Testing only)        |
+| POST   | `/payments/webhook`        | Stripe webhook for payment verification         |
+| GET    | `/payments`                | Get all payments (Public route for Testing only)        |
 
 ---
 
@@ -110,14 +110,35 @@ GET /products?page=1&limit=4&sortBy=createdAt&sortOrder=desc
 
 - ### **Registration**
 ```
-POST /api/v1/auth/register
+POST /auth/register
 ```
 **Request Body Example:**
 ```
 {
     "fullName":"Rony Ahmend",
     "gender":"male",
-    "email":"rony@gmail.com",
+    "email":"ronyahmed@gmail.com",
+    "password":"demo123"
+}
+```
+**Response Example:**
+```
+{
+    "success": true,
+    "statusCode": 201,
+    "message": "Registration successful",
+    "data":null
+}
+```
+
+- ### **Login**
+```
+POST /auth/login
+```
+**Request Body Example:**
+```
+{
+    "email":"ronyahmed@gmail.com",
     "password":"demo123"
 }
 ```
@@ -126,17 +147,16 @@ POST /api/v1/auth/register
 {
     "success": true,
     "statusCode": 200,
-    "message": "Registration successful",
+    "message": 'Login successful and accessToken retrieved with cookie',
     "data":null
 }
 ```
 
+## User Endpoints 
 
-## User Endpoints
-
-- ### **Get all users**
+- ### **Get all users  (Public endpoint for testing purpose only)**
 ```
-POST /api/v1/users
+GET /users
 ```
 **Request Body Example:**
 ```
@@ -176,7 +196,7 @@ POST /api/v1/users
 
 - ### **Get logged in user**
 ```
-GET /api/v1/users/me
+GET /users/me
 ```
 **Request Body Example:**
 ```
@@ -213,7 +233,7 @@ GET /api/v1/users/me
 
 - ### **Create Product**
 ```
-POST /api/v1/products
+POST /products
 ```
 **Request Body Example:**
 ```
@@ -246,15 +266,9 @@ POST /api/v1/products
 
 - ### **Get All Products**
 ```
-GET /api/v1/products
+GET /products
 ```
-**Request Body Example:**
-```
-{
-    "email":"rony@gmail.com",
-    "password":"demo123"
-}
-```
+
 **Response Example:**
 ```
 {
@@ -297,12 +311,12 @@ GET /api/v1/products
 
 - ### **Order Initialize**
 ```
-POST /api/v1/orders/init
+POST /orders/init
 ```
 **Request Body Example:**
 ```
 {
-   "productId":"696a556c3a1f955c9ff1f76d",
+    "productId":"696a556c3a1f955c9ff1f76d",
     "quantity":5,
     "deliveryAddress":"Mymensing Sadar,Mymenshing,Bangladesh"
 }
@@ -312,7 +326,7 @@ POST /api/v1/orders/init
 {
     "success": true,
     "statusCode": 201,
-    "message": "Order initialized successfully",
+    "message": "Order initialized successfully.Please complete payment from provided url",
     "data": {
         "paymentSessionUrl": "https://checkout.stripe.com/c/pay/cs_test_a1IcsK7G36gXgFSrCEWYb1BJL0MK4itmdkZvdijD9VgsS5cGx54GINUpu2#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWjA0SkBDamRDNXBrNjFHdlB%2FaUZgRDRUb3M0M28xRGdgUnVhNkRQdlNiU31nMU9BNEFnXzAyQm9mRlxrPXZLZ2BqbE1dPXZzbTJsUX90SFFmN2hofGhnYV13NTVmZzxRS2N9dycpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl"
     }
@@ -322,7 +336,7 @@ POST /api/v1/orders/init
 
 - ### **Get logged in user orders**
 ```
-POST /api/v1/orders/me
+GET /orders/me
 ```
 **Response Example:**
 ```
@@ -376,9 +390,9 @@ POST /api/v1/orders/me
 
 
 
-- ### **Get all orders**
+- ### **Get all orders  (Public endpoint for testing purpose only)**
 ```
-POST /api/v1/orders
+GET /orders
 ```
 **Response Example:**
 ```
@@ -437,9 +451,9 @@ POST /api/v1/orders
 
 ## Payments Endpoints
 
-- ### **Get all payments**
+- ### **Get all payments (Public endpoint for testing purpose only)**
 ```
-POST /api/v1/payments
+GET /payments
 ```
 **Response Example:**
 ```
@@ -478,5 +492,12 @@ POST /api/v1/payments
     }
 }
 ```
+### **Webhook**
+This endpoint is triggered automatically by the payment provider after a payment-related event occurs.
+
+```
+POST /webhook
+```
+
 
 
