@@ -1,3 +1,13 @@
+# REST API & Payment Integration
+
+##  Tech Stack Used
+- TypeScript
+- Node.js
+- Express.js 
+- Zod
+- Mongoose
+- MongoDB 
+- JWT 
 
 
 ## Setup Instructions
@@ -31,6 +41,9 @@ The project includes a seed script to populate the database with **initial demo 
 ```bash
 npm run seed
 ```
+
+
+
 
 ##  API Endpoints
 
