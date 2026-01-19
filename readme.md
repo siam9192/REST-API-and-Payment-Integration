@@ -18,9 +18,9 @@ cp env.example .env
 
 
 
-## Databse Seeding
+## Database Seeding
 
-The project includes a seed script to populate the database with **initial demo data** (users, projects, riks).
+The project includes a seed script to populate the database with **initial demo data** (users, products).
 
 ### Location
 /backend/src/app/seed/script.ts

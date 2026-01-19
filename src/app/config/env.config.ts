@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'node:path';
 
-dotenv.config({ path: path.join((process.cwd(), '.env')) });
+dotenv.config({ path: [path.join((process.cwd(), '.env')),path.join((process.cwd(), '.env.example'))] });
 
 const envConfig = {
   environment: process.env.ENVIRONMENT,
